@@ -1,37 +1,40 @@
 import random
 
 character_descriptions = {
-    'skeleton': '',
-    'second_name': '',
-    'yo momma': ''
+    'skeleton': 'goes doot doot',
+    'giant spider': 'has long legs and many eyes',
+    'masked bandit': 'is up to no good',
+    'goblin': 'is loud and smells musty',
+    'skeleton': 'wants your calcium',
+    'giant rat': 'is probably the ugliest thing I have ever seen'
 }
 
-room_description = {
-    '', '', '', '', ''
-}
+room_description = [
+    'torchlit room with stone walls and broken furniture',
+    'spiraling wooden staircase with some steps missing',
+    'old treasure room thats been emptied long ago',
+    'long hallway filled with cobwebs',
+    'heavily crowded chuckie cheese restaurant with tons of screaming kids'
+]
 
 
 class Room:
-    def __init__(self):
-        x = random.randint(0, 1)
-        if x == 0:
-            self.enemy = Character(random.randint(2, 8), random.randint(5, 10))
-        else:
-            self.enemy = Character(random.randint(6, 12), random.randint(10, 20))
+    def __init__(self, enemies):
         self.description = random.choice(room_description)
+        self.enemies = enemies
 
 
 class Character:
-    def __init__(self, health, damage, name=None):
+    def __init__(self, health=3, damage=3, name=None):
         self.health = health
         self.damage = damage
-        self.name = name if not None else random.choice(['skeleton', 'second_name', "yo momma"])
-        self.description = character_descriptions[self.name]
+        self.name = random.choice(list(character_descriptions.keys()))
+        self.description = character_descriptions[
+            self.name] if self.name in character_descriptions else ' bit of a butt'
         self.friendly = random.choice([True, False])
 
     def damage_character(self, amount):
         self.health -= amount
-        return self.health
 
     def heal_character(self, amount):
         self.health += amount
@@ -41,4 +44,5 @@ class Character:
         return self.friendly
 
     def talk(self):
-        return "Hello friend, I'm leaving now."
+        return "Hello friend, I'm just passing through."
+
