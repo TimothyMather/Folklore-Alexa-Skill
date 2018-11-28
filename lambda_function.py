@@ -8,6 +8,14 @@ character = None
 room = None
 
 
+def no_enemey_in_room():
+    speech = "You have conquered all the enemies in this room. Please move to the next one."
+    card_text = speech
+    card_title = "Congrats"
+    prompt = ''
+    return build_response(speech, card_title, card_text, prompt, False)
+
+
 def handle_attack(self):
     """
     Attack Intent handler, does damage to the ememy in the room.
@@ -15,10 +23,13 @@ def handle_attack(self):
     global character
     global room
     i = 0
+    enemy = None
     for e in room.enemies:
         if e.health > 0:
             enemy = e
             break
+    if enemy is None:
+        return no_enemey_in_room()
     if character.health <= 0:
         speech_text = "You died, please try again."
     else:
@@ -87,7 +98,7 @@ def state_room(event):
     """
     global character
     global room
-    speech = "you are in a {} with a {} in it, it still {}".format(room.description, room.enemies[0].name,
+    speech = "you are in a{} with a {} in it, it still {}".format(room.description, room.enemies[0].name,
                                                                    room.enemies[0].description)
     reprompt = 'Do you attack?'
     card_title = 'same room'
@@ -113,7 +124,7 @@ def on_start():
 
 
 def on_launch():
-    speech = "Welcome to Folklore, Do you want to go on an adventure?"
+    speech = "Welcome to Folklore, A modest cave in a dark woods marks the entrance to this dungeon. Beyond the dark cave lies a scanty room. Do you want to go on an adventure?"
     card_title = "Folklore"
     card_text = "Welcome to Folklore, its adventure time"
     prompt_text = "are you ready?"
@@ -126,6 +137,8 @@ def set_up(event):
     """
     global room
     global character
+    if room is not None or character is not None:
+        return fallback_call(event)
     input = event['request']['intent']['slots']['input']['value']
     character = Character(100, 5)
     set_scene(event, [create_enemy(event)])
@@ -133,7 +146,7 @@ def set_up(event):
         speech = "Despite not wanting to go on an adventure the ground breaks out from underneath you and you find yourself in a {} and see a {} it {}".format(
             room.description, room.enemies[0].name, room.enemies[0].description)
     else:
-        speech = "You enter a {} and see a {} it {}".format(room.description, room.enemies[0].name,
+        speech = "You enter a{} and see a {} it {}".format(room.description, room.enemies[0].name,
                                                             room.enemies[0].description)
     reprompt = 'Do you attack?'
     card_title = 'New Room'
@@ -143,7 +156,7 @@ def set_up(event):
 
 def on_end():
     logger.info('End of Game')
-    speech = "Until next time."
+    speech = "Until next time. Coward."
     card_title = 'Goodbye'
     card_text = speech
     prompt = ''
@@ -151,8 +164,10 @@ def on_end():
 
 
 def fallback_call(event):
-    """If Alexa cannot tell what the user said it tells the user what it can do."""
-    speech = "I did not understant that. You can attack, run away, talk or ask what you can do."
+    """
+    If Alexa cannot tell what the user said it tells the user what it can do.
+    """
+    speech = "I did not understant that. You can attack, run away, talk or ask what is in the room."
     card_title = "Whoops!"
     card_text = "I did not understant that. You can attack, run away, talk or ask what you can do."
     prompt_text = ""
@@ -163,7 +178,7 @@ def assistance(event):
     """
     Tells the user what they can do if they ask for help.
     """
-    speech = 'You can attack, run away, talk or ask what you can do.'
+    speech = 'You can attack, run away, talk or ask what is in the room.'
     card_title = "Help"
     card_text = "You can attack, run away, talk or ask what you can do. What would you like to do?"
     prompt_text = ""
