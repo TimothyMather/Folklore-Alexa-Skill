@@ -124,7 +124,8 @@ def on_start():
 
 
 def on_launch():
-    speech = "Welcome to Folklore, A modest cave in a dark woods marks the entrance to this dungeon. Beyond the dark cave lies a scanty room. Do you want to go on an adventure?"
+    speech = "Welcome to Folklore, A modest cave in a dark woods marks the entrance to this dungeon. " \
+             "Beyond the dark cave lies a scanty room. Do you want to go on an adventure?"
     card_title = "Folklore"
     card_text = "Welcome to Folklore, its adventure time"
     prompt_text = "are you ready?"
@@ -143,7 +144,8 @@ def set_up(event):
     character = Character(100, 5)
     set_scene(event, [create_enemy(event)])
     if input == 'no':
-        speech = "Despite not wanting to go on an adventure the ground breaks out from underneath you and you find yourself in a {} and see a {} it {}".format(
+        speech = "Despite not wanting to go on an adventure the ground breaks " \
+                 "out from underneath you and you find yourself in a {} and see a {} it {}".format(
             room.description, room.enemies[0].name, room.enemies[0].description)
     else:
         speech = "You enter a{} and see a {} it {}".format(room.description, room.enemies[0].name,
