@@ -9,7 +9,7 @@ room = None
 
 
 def no_enemey_in_room():
-    speech = "You have conquered all the enemies in this room. Please move to the next one."
+    speech = "You have conquered all the enemies in this room. Please move to the next one by saying move."
     card_text = speech
     card_title = "Congrats"
     prompt = ''
@@ -35,13 +35,13 @@ def handle_attack(self):
     else:
         enemy.damage_character(character.damage)
         if enemy.health <= 0:
-            speech_text = "You did {} damage, well done you killed the {}".format(character.damage, enemy.name)
+            speech_text = "You did {} damage, well done you killed the {}, what would you like to do?".format(character.damage, enemy.name)
         else:
             character.damage_character(enemy.damage)
-            speech_text = "You attacked the {} for {} damage, it has {} health remaining. The {} attacked you for {} damage, you have {} health remaining".format(
+            speech_text = "You attacked the {} for {} damage, it has {} health remaining. The {} attacked you for {} damage, you have {} health remaining, what would you like to do?".format(
                 enemy.name, character.damage, enemy.health, enemy.name, enemy.damage, character.health)
     card_title = "ATTACK"
-    card_text = "you attacked the {}".format(enemy.name)
+    card_text = "you attacked the {}, what would you like to do?".format(enemy.name)
     reprompt = "attack again?"
     return build_response(speech_text, card_title, card_text, reprompt, False)
 
@@ -56,7 +56,7 @@ def handle_room(event):
     if character.health <= 0:
         speech = "You died, please try again."
     else:
-        speech = "You enter a {} and see a {} it {}".format(room.description, room.enemies[0].name,
+        speech = "You enter a {} and see a {} it {}, what would you like to do?".format(room.description, room.enemies[0].name,
                                                             room.enemies[0].description)
     reprompt = 'Do you attack?'
     card_title = 'New Room'
@@ -74,7 +74,7 @@ def handle_speak(event):
     if enemy.is_friendly():
         speech_text = enemy.talk()
     else:
-        speech_text = "The {} ignored you and attacked, you took {} damage. ".format(enemy.name, enemy.damage)
+        speech_text = "The {} ignored you and attacked, you took {} damage. what would you like to do? ".format(enemy.name, enemy.damage)
         character.damage_character(enemy.damage)
         if character.health <= 0:
             speech_text += "You died, please try again."
@@ -98,7 +98,7 @@ def state_room(event):
     """
     global character
     global room
-    speech = "you are in a{} with a {} in it, it still {}".format(room.description, room.enemies[0].name,
+    speech = "you are in a{} with a {} in it, it still {}, what would you like to do?".format(room.description, room.enemies[0].name,
                                                                    room.enemies[0].description)
     reprompt = 'Do you attack?'
     card_title = 'same room'
@@ -125,7 +125,7 @@ def on_start():
 
 def on_launch():
     speech = "Welcome to Folklore, A modest cave in a dark woods marks the entrance to this dungeon. " \
-             "Beyond the dark cave lies a scanty room. Do you want to go on an adventure?"
+             "Beyond the dark cave lies a scanty room. Do you want to enter?"
     card_title = "Folklore"
     card_text = "Welcome to Folklore, its adventure time"
     prompt_text = "are you ready?"
@@ -145,10 +145,10 @@ def set_up(event):
     set_scene(event, [create_enemy(event)])
     if input == 'no':
         speech = "Despite not wanting to go on an adventure the ground breaks " \
-                 "out from underneath you and you find yourself in a {} and see a {} it {}".format(
+                 "out from underneath you and you find yourself in a {} and see a {} it {}, what would you like to do?".format(
             room.description, room.enemies[0].name, room.enemies[0].description)
     else:
-        speech = "You enter a{} and see a {} it {}".format(room.description, room.enemies[0].name,
+        speech = "You enter a{} and see a {} it {}, what would you like to do?".format(room.description, room.enemies[0].name,
                                                             room.enemies[0].description)
     reprompt = 'Do you attack?'
     card_title = 'New Room'
