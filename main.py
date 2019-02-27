@@ -7,6 +7,7 @@ character_descriptions = {
     'goblin': 'is loud and smells musty',
     'skeleton': 'wants your calcium',
     'giant rat': 'is probably the ugliest thing I have ever seen'
+    'dwarf': 'is loud and looks angry'
 }
 
 room_description = [
@@ -22,6 +23,10 @@ class Room:
     def __init__(self, enemies):
         self.description = random.choice(room_description)
         self.enemies = enemies
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
 
 
 class Character:
@@ -46,3 +51,6 @@ class Character:
     def talk(self):
         return "Hello friend, I'm just passing through."
 
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
